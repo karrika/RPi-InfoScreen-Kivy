@@ -16,6 +16,10 @@ import pytz
 import json
 import locale
 
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
+
 MIN_TIDES = 7
 
 TYPES_MAP = {"english": {"High": "HW", "Low": "LW"}, "french": { "High": "HM", "Low": "BM" }}
@@ -43,7 +47,7 @@ class Tide(BoxLayout):
         summary["type_i18n"] = TYPES_MAP[self.language][summary["type"]]
         self.desc = ("{type_i18n:s}\n{ldate:s}").format(**summary)
 
-class TidesSummary(Screen):
+class TidesSummary(Screen, BlackHole):
     tidesurl = "https://www.worldtides.info/api?extremes&lat={lat}&lon={lon}&length=172800&key={key}"
     timedata = DictProperty(None)
     next_t = DictProperty(None)
@@ -75,10 +79,10 @@ class TidesSummary(Screen):
         #with open('screens/tides/result.json') as data_file:    
         #    self.tides = json.load(data_file)
         self.tides = requests.get(self.url_tides).json()
-        if self.tides == None or not self.tides.has_key('status'):
+        if self.tides == None or not 'status' in self.tides:
             raise TideException("Unknown error")
         if self.tides['status'] != 200:
-            if self.tides.has_key('error'):
+            if 'error' in self.tides:
                 raise TideException(self.tides['error'])
             else:
                 raise TideException("Unknown error")
@@ -172,7 +176,7 @@ class TidesSummary(Screen):
             return True
         return False
 
-class TidesScreen(Screen):
+class TidesScreen(Screen, BlackHole):
     def __init__(self, **kwargs):
         super(TidesScreen, self).__init__(**kwargs)
         self.running = False
