@@ -21,7 +21,8 @@ class WordClockLetter(Label):
     """
     textcol = ListProperty([0.15, 0.15, 0.15, 1])
 
-    def __init__(self, **kwargs):
+    def __init__(self, colour = None, **kwargs):
+        self.on_colour = colour
         super(WordClockLetter, self).__init__(**kwargs)
 
         # Flag for determining whether the state of the letter has changed
@@ -31,7 +32,7 @@ class WordClockLetter(Label):
         self.fadetime = 1
 
         self.off_colour = [0.15, 0.15, 0.15, 1]
-        self.on_colour = kwargs["colour"]
+        #self.on_colour = kwargs["colour"]
 
     def toggle(self, on):
         if on:
@@ -45,9 +46,15 @@ class WordClockLetter(Label):
             anim = Animation(textcol=colour, duration=self.fadetime)
             anim.start(self)
 
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
 
-class WordClockScreen(Screen):
-    def __init__(self, **kwargs):
+class WordClockScreen(Screen, BlackHole):
+    def __init__(self, params = None, **kwargs):
+        params = params
+        self.lang = params["language"].lower()
+        self.colour = self.get_colour(params["colour"])
         super(WordClockScreen, self).__init__(**kwargs)
         self.running = False
         self.timer = None
@@ -56,8 +63,8 @@ class WordClockScreen(Screen):
         # Set up some variables to help load the chosen layout.
         self.basepath = os.path.dirname(os.path.abspath(__file__))
         self.layouts = os.path.join(self.basepath, "layouts")
-        self.lang = kwargs["params"]["language"].lower()
-        self.colour = self.get_colour(kwargs["params"]["colour"])
+        #self.lang = kwargs["params"]["language"].lower()
+        #self.colour = self.get_colour(kwargs["params"]["colour"])
 
     def get_colour(self, colour):
         return [x/255.0 for x in colour] + [1]

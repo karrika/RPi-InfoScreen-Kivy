@@ -1,7 +1,7 @@
 import imp
 
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import BooleanProperty, ObjectProperty
+from kivy.properties import BooleanProperty, ObjectProperty, ListProperty
 from kivy.lang import Builder
 from kivy.logger import Logger
 
@@ -13,13 +13,16 @@ class InfoScreen(FloatLayout):
     # Flag for determining whether screen is locked or not
     locked = BooleanProperty(False)
 
-    def __init__(self, **kwargs):
+    # List of plugings
+
+    def __init__(self, plugins, **kwargs):
         scrmgr = ObjectProperty(None)
+        plugins = plugins
 
         super(InfoScreen, self).__init__(**kwargs)
 
         # Get our list of available plugins
-        plugins = kwargs["plugins"]
+        #plugins = kwargs["plugins"]
 
         # We need a list to hold the names of the enabled screens
         self.availablescreens = []
@@ -74,7 +77,7 @@ class InfoScreen(FloatLayout):
                     Logger.info("Screen: {} loaded.".format(p["name"]))
 
                 # Uh oh, something went wrong...
-                except Exception, e:
+                except Exception as e:
                     # Add the screen name and error message to our list
                     Logger.error("Could not import "
                                  "{} screen. Skipping...".format(p["name"]))

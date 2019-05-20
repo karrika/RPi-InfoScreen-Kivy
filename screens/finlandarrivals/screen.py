@@ -25,8 +25,11 @@ def natural_sort_key(s, _nsre=nsre):
     return [int(text) if text.isdigit() else text.lower()
             for text in re.split(_nsre, s)]
 
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
 
-class FinlandArrivals(BoxLayout):
+class FinlandArrivals(BoxLayout, BlackHole):
     """Custom widget to display bus information.
 
        Displays route name, destination and expected arrival time.
@@ -47,7 +50,7 @@ class FinlandArrivals(BoxLayout):
         self.bus_delay = bus["delay"]
 
 
-class FinlandArrivalsStop(Screen):
+class FinlandArrivalsStop(Screen, BlackHole):
     """Custom screen class for showing countdown information for a specific
        bus stop.
     """
@@ -174,8 +177,7 @@ class FinlandArrivalsStop(Screen):
                         if tb.state == "down"]
         self.draw_buses()
 
-
-class FinlandArrivalsScreen(Screen):
+class FinlandArrivalsScreen(Screen, BlackHole):
     """Base screen object for Finland Public transports.
 
     Has a screenmanager to hold screens for specific bus stops.

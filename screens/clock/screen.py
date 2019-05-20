@@ -4,11 +4,14 @@ from kivy.properties import DictProperty
 from kivy.clock import Clock
 from kivy.uix.screenmanager import Screen
 
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
 
-class ClockScreen(Screen):
+class ClockScreen(Screen, BlackHole):
     """Simple plugin screen to show digital clock of current time."""
     # String Property to hold time
-    timedata = DictProperty(None)
+    timedata = DictProperty({"h": None, "m": None, "s":None})
 
     def __init__(self, **kwargs):
         self.get_time()

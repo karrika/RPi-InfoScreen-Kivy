@@ -6,14 +6,16 @@ class FailedScreen(Screen):
     """Custom Screen to notify users where certain plugins have not installed
        correctly.
     """
-    def __init__(self, **kwargs):
+    def __init__(self, dep=None, failed=None, **kwargs):
+        self.dep = dep
+        self.failed = failed
         super(FailedScreen, self).__init__(**kwargs)
 
         # Get details of the screens that have failed
         # Unmet dependencies
-        self.dep = kwargs["dep"]
+        #self.dep = kwargs["dep"]
         # Other unhandled failures
-        self.failed = kwargs["failed"]
+        #self.failed = kwargs["failed"]
 
         # Build our screen
         self.buildLabel()

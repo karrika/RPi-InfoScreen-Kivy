@@ -6,7 +6,11 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 
-class XmasScreen(Screen):
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
+
+class XmasScreen(Screen, BlackHole):
 
     first_line = StringProperty("")
     second_line = StringProperty("")
