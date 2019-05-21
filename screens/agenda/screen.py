@@ -3,6 +3,7 @@ import sys
 import httplib2
 import json
 import struct
+import codecs
 from datetime import timedelta, datetime
 from datetime import time as dt_time
 from itertools import groupby
@@ -23,21 +24,24 @@ from authorise import get_credentials
 import pytz
 import dateutil.parser
 
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
 
 # Quick function to round numbers to nearest n
 def rounding(x, base=5):
     return int(base * round(float(x)/base))
 
-
 class CalendarHeader(GridLayout):
     """Custom widget class to show header for date."""
     header = StringProperty("")
 
-    def __init__(self, **kwargs):
-        super(CalendarHeader, self).__init__(**kwargs)
+    def __init__(self, dt, **kwargs):
+        self.header = dt.strftime("%A %d %B %Y")
+        GridLayout.__init__(self, **kwargs)
 
         # Format the date e.g. "Sunday 31 November 2015"
-        self.header = kwargs["dt"].strftime("%A %d %B %Y")
+        #self.header = kwargs["dt"].strftime("%A %d %B %Y")
 
 
 class CalendarItem(GridLayout):
@@ -47,9 +51,10 @@ class CalendarItem(GridLayout):
     evdetail = StringProperty("")
     evtime = StringProperty("")
 
-    def __init__(self, **kwargs):
-        super(CalendarItem, self).__init__(**kwargs)
-        self.formatEvent(kwargs["event"])
+    def __init__(self, event, **kwargs):
+        self.formatEvent(event)
+        GridLayout.__init__(self, **kwargs)
+        #self.formatEvent(kwargs["event"])
 
     def formatEvent(self, event):
         """Converts the event object into the relevant variables needed to
@@ -87,7 +92,7 @@ class CalendarItem(GridLayout):
         # self.textcolour = event["fg"]
 
 
-class AgendaScreen(Screen):
+class AgendaScreen(Screen, BlackHole):
     """Base screen widget for Agenda"""
 
     # Need a reference to the Grid Layout
@@ -269,14 +274,17 @@ class AgendaScreen(Screen):
         # Set an end time 90 day's ahead
         utc_end = end_time.strftime("%Y-%m-%dT%H:%M:00Z")
 
+        # Use decoder for hex conversions
+        decode_hex = codecs.getdecoder("hex_codec")
+
         # Loop over available calendars
         for cal in self.calendarlist:
 
             # Create kivy-compatible versions of the calendar colours
             fg_raw = list(struct.unpack("BBB",
-                                        cal["fg"][-6:].decode("hex")))
+                                        decode_hex(cal["fg"][-6:])[0]))
             bg_raw = list(struct.unpack("BBB",
-                                        cal["bg"][-6:].decode("hex")))
+                                        decode_hex(cal["bg"][-6:])[0]))
 
             # Normalise the values and darken slightly
             fg = [rounding(x/25.5, 2)/12.0 for x in fg_raw] + [1]

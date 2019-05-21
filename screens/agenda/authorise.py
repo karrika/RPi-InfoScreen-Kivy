@@ -7,6 +7,7 @@ from apiclient import discovery
 import oauth2client
 from oauth2client import client
 from oauth2client import tools
+from oauth2client import file
 
 try:
     import argparse
@@ -17,7 +18,7 @@ except ImportError:
 CUR_DIR = os.path.dirname(os.path.abspath(__file__))
 
 SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
-CLIENT_SECRET_FILE = 'client_secret.json'
+CLIENT_SECRET_FILE = 'credentials.json'
 APPLICATION_NAME = 'RPi Information Screen'
 
 SECRET = os.path.join(CUR_DIR, "secret", CLIENT_SECRET_FILE)
