@@ -52,14 +52,17 @@ MATCH_COLOURS = {"L": [0.1, 0.1, 0.5, 1],
 
 # Football Matches ###########################################################
 
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
 
 class FootballEvent(BGLabel):
     """Simple class to show a label displaying a notification."""
     event_text = StringProperty("")
 
-    def __init__(self, **kwargs):
+    def __init__(self, eventtext, **kwargs):
         super(FootballEvent, self).__init__(**kwargs)
-        self.event_text = kwargs["eventtext"]
+        self.event_text = eventtext
 
 
 class FootballNoMatch(BoxLayout):
@@ -75,9 +78,9 @@ class FootballBase(Screen):
     """Screen for a football match."""
     teamname = StringProperty("")
 
-    def __init__(self, **kwargs):
+    def __init__(self, team, **kwargs):
+        self.team = team
         super(FootballBase, self).__init__(**kwargs)
-        self.team = kwargs["team"]
         self.teamname = self.team
         self.running = False
         self.no_match = None
@@ -204,9 +207,9 @@ class FootballMatchScreen(FloatLayout):
     awaybadge = StringProperty("images/10x10_transparent.png")
     status = StringProperty("")
 
-    def __init__(self, **kwargs):
+    def __init__(self, mo, **kwargs):
+        self.matchobject = mo
         super(FootballMatchScreen, self).__init__(**kwargs)
-        self.matchobject = kwargs["mo"]
         self.homestack = self.ids.home_incidents
         self.awaystack = self.ids.away_incidents
         self.checkMatch()
@@ -255,10 +258,10 @@ class Incident(BoxLayout):
     home = BooleanProperty(True)
     player = StringProperty("")
 
-    def __init_(self, **kwargs):
+    def __init_(self, home, player, **kwargs):
+        self.home = home
+        self.player = player
         super(Incident, self).__init__(**kwargs)
-        self.home = kwargs["home"]
-        self.player = kwargs["player"]
 
 
 # Leagues ####################################################################
@@ -267,9 +270,9 @@ class LeagueBase(Screen):
     """Base widget for football league summary screen."""
     leaguename = StringProperty("")
 
-    def __init__(self, **kwargs):
+    def __init__(self, league, **kwargs):
+        self.leagueid = league
         super(LeagueBase, self).__init__(**kwargs)
-        self.leagueid = kwargs["league"]
         self.leaguename = "Retrieving league information."
         self.running = False
         self.timer = None
@@ -431,9 +434,9 @@ class LeagueGame(ButtonBehavior, BoxLayout):
     homebg = ListProperty([0.1, 0.1, 0.1, 1])
     awaybg = ListProperty([0.1, 0.1, 0.1, 1])
 
-    def __init__(self, **kwargs):
+    def __init__(self, match, **kwargs):
+        m = match
         super(LeagueGame, self).__init__(**kwargs)
-        m = kwargs["match"]
         self.hometeam = m.HomeTeam
         self.awayteam = m.AwayTeam
         self.homescore = str(m.HomeScore)
@@ -475,9 +478,9 @@ class LeagueDetail(ButtonBehavior, BoxLayout):
     homebg = ListProperty([0.1, 0.1, 0.1, 1])
     awaybg = ListProperty([0.1, 0.1, 0.1, 1])
 
-    def __init__(self, **kwargs):
+    def __init__(self, mo, **kwargs):
+        self.mo = mo
         super(LeagueDetail, self).__init__(**kwargs)
-        self.mo = kwargs["mo"]
         self.getDetail()
         m = self.mo
         self.hometeam = m.HomeTeam
@@ -513,11 +516,11 @@ class FootballErrorScreen(Screen):
                     " further information.")
 
 
-class FootballScreen(Screen):
+class FootballScreen(Screen, BlackHole):
     """Base screen for football scores."""
-    def __init__(self, **kwargs):
+    def __init__(self, params, **kwargs):
+        self.params = params
         super(FootballScreen, self).__init__(**kwargs)
-        self.params = kwargs["params"]
         self.setup()
         self.flt = self.ids.football_float
         self.flt.remove_widget(self.ids.football_base_box)

@@ -14,9 +14,8 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import urllib2
 import string
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import re
 from datetime import datetime, time
 import json
@@ -831,7 +830,7 @@ class FootballMatch(matchcommon):
                             datetime.now().date(),
                             time(koh, kom, 0))
                 timetokickoff = kickoff - self.__getUKTime()
-            except Exception, e:
+            except Exception as e:
                 timetokickoff = None
             finally:
                 pass
