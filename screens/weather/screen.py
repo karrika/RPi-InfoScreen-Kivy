@@ -12,6 +12,9 @@ from kivy.uix.scrollview import ScrollView
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
 
 class WeatherForecastHourly(BoxLayout):
     """Custom widget to show hourly forecast summary."""
@@ -60,11 +63,11 @@ class WeatherSummary(Screen):
     """Screen to show weather summary for a selected location."""
     location = StringProperty("")
 
-    def __init__(self, **kwargs):
+    def __init__(self, location, forecast, hourly, **kwargs):
         super(WeatherSummary, self).__init__(**kwargs)
-        self.location = kwargs["location"]
-        self.url_forecast = kwargs["forecast"]
-        self.url_hourly = kwargs["hourly"]
+        self.location = location
+        self.url_forecast = forecast
+        self.url_hourly = hourly
         self.bx_forecast = self.ids.bx_forecast
         self.bx_hourly = self.ids.bx_hourly
         self.nextupdate = 0
@@ -142,14 +145,14 @@ class WeatherSummary(Screen):
         self.timer = Clock.schedule_once(self.getData, dt)
 
 
-class WeatherScreen(Screen):
+class WeatherScreen(Screen, BlackHole):
     forecast = "http://api.wunderground.com/api/{key}/forecast/q/{location}"
     hourly = "http://api.wunderground.com/api/{key}/hourly/q/{location}"
 
-    def __init__(self, **kwargs):
+    def __init__(self, params, **kwargs):
+        self.key = params["key"]
+        self.locations = params["locations"]
         super(WeatherScreen, self).__init__(**kwargs)
-        self.key = kwargs["params"]["key"]
-        self.locations = kwargs["params"]["locations"]
         self.flt = self.ids.weather_float
         self.flt.remove_widget(self.ids.weather_base_box)
         self.scrmgr = self.ids.weather_scrmgr
