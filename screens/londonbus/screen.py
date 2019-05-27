@@ -24,6 +24,9 @@ def natural_sort_key(s, _nsre=nsre):
     return [int(text) if text.isdigit() else text.lower()
             for text in re.split(_nsre, s)]
 
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
 
 class LondonBus(BoxLayout):
     """Custom widget to display bus information.
@@ -34,9 +37,9 @@ class LondonBus(BoxLayout):
     bus_destination = StringProperty("Loading...")
     bus_time = StringProperty("Loading...")
 
-    def __init__(self, **kwargs):
+    def __init__(self, bus, **kwargs):
+        bus = bus
         super(LondonBus, self).__init__(**kwargs)
-        bus = kwargs["bus"]
         self.bus_route = bus["route"]
         self.bus_destination = bus["destination"]
         self.bus_time = bus["time"]
@@ -48,9 +51,9 @@ class LondonBusStop(Screen):
     """
     description = StringProperty("")
 
-    def __init__(self, **kwargs):
+    def __init__(self, stop, **kwargs):
+        self.stop = stop
         super(LondonBusStop, self).__init__(**kwargs)
-        self.stop = kwargs["stop"]
         self.description = self.stop["description"]
         self.filters = None
 
@@ -69,6 +72,7 @@ class LondonBusStop(Screen):
         """Starts the process of retrieving countdown information."""
         try:
             # Load the bus data.
+            print(self.stop["stopid"])
             self.buses = LB.BusLookup(self.stop["stopid"])
         except:
             # If there's an error (e.g. no internet connection) then we have
@@ -141,14 +145,15 @@ class LondonBusStop(Screen):
         self.draw_buses()
 
 
-class LondonBusScreen(Screen):
+class LondonBusScreen(Screen, BlackHole):
     """Base screen object for London Buses.
 
     Has a screenmanager to hold screens for specific bus stops.
     """
-    def __init__(self, **kwargs):
+    def __init__(self, params, **kwargs):
+        self.params = params
         super(LondonBusScreen, self).__init__(**kwargs)
-        self.params = kwargs["params"]
+        #self.params = kwargs["params"]
         self.stops = self.params["stops"]
         self.flt = self.ids.lbus_float
         self.flt.remove_widget(self.ids.lbus_base_box)

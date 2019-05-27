@@ -39,7 +39,7 @@ def __getBusData(stopcode):
             # hackery first. The response is a string representing a list
             # on each line.
             # So first, we split the response into a list of lines
-            rawdata = r.content.split("\r\n")
+            rawdata = r.content.decode('utf-8').split("\r\n")
             # Then we turn this into a single line of list strings separated
             # by commas
             rawdata = ",".join(rawdata)
@@ -50,6 +50,7 @@ def __getBusData(stopcode):
             return json.loads(rawdata)
 
     else:
+        print("Error", stopcode)
         return None
 
 
