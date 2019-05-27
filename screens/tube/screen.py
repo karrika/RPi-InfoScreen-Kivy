@@ -31,12 +31,15 @@ LINES = ['BAK',
          'VIC',
          'WAT']
 
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
 
-class TubeScreen(Screen):
+class TubeScreen(Screen, BlackHole):
     tube = DictProperty({})
 
     def __init__(self, **kwargs):
-        self.params = kwargs["params"]
+        self.params = kwargs.pop("params")
         _NUMERALS = '0123456789abcdefABCDEF'
         self._HEXDEC = {v: int(v, 16) for v in (x+y for x in _NUMERALS
                         for y in _NUMERALS)}
@@ -134,8 +137,8 @@ class TubeDetail(BoxLayout):
     fg = ListProperty([])
 
     def _init__(self, **kwargs):
+        self.line = kwargs.pop["line"]
+        self.detail = kwargs.pop["detail"]
+        self.bg = kwargs.pop["bg"]
+        self.fg = kwargs.pop["fg"]
         super(TubeDetail, self).__init__(**kwargs)
-        self.line = kwargs["line"]
-        self.detail = kwargs["detail"]
-        self.bg = kwargs["bg"]
-        self.fg = kwargs["fg"]
