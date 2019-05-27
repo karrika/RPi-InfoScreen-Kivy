@@ -15,7 +15,7 @@ from datetime import datetime
 import requests
 
 # BeautifulSoup is the tool we'll use for scraping the pages
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 # Regular expressions will be needed to match certain classes and manipulate
 # some data we get back.
@@ -53,7 +53,7 @@ def __parsePage(page):
 
     else:
         # Send the web page to BeautifulSoup
-        raw = BeautifulSoup(page)
+        raw = BeautifulSoup(page, features="lxml")
         try:
             # We're using looking for table rows that contain "mtx" in the
             # class tag. We need to use regex here as there may be other

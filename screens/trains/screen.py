@@ -13,6 +13,9 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import nationalrail as NR
 
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
 
 class TrainJourney(Screen):
     desc = StringProperty("")
@@ -24,9 +27,9 @@ class TrainJourney(Screen):
                "from_platform": "Platform"
                }
 
-    def __init__(self, **kwargs):
+    def __init__(self, journey, **kwargs):
+        j = journey
         super(TrainJourney, self).__init__(**kwargs)
-        j = kwargs["journey"]
         self.desc = j["description"]
         self.to = j["to"]
         self.frm = j["from"]
@@ -111,22 +114,22 @@ class TrainDetail(BoxLayout):
     platform = StringProperty("")
     bg = ListProperty([0.1, 0.1, 0.1, 1])
 
-    def __init__(self, **kwargs):
+    def __init__(self, train, bg = [0.1, 0.1, 0.1, 1], **kwargs):
+        t = train
+        self.bg = bg
         super(TrainDetail, self).__init__(**kwargs)
-        t = kwargs["train"]
         self.departing = t["departing"]
         self.arriving = t["arriving"]
         self.changes = t["changes"]
         self.duration = t["duration"]
         self.status = t["status"]
         self.platform = t.get("from_platform", "")
-        self.bg = kwargs.get("bg", [0.1, 0.1, 0.1, 1])
 
 
-class TrainScreen(Screen):
-    def __init__(self, **kwargs):
+class TrainScreen(Screen, BlackHole):
+    def __init__(self, params, **kwargs):
+        self.params = params
         super(TrainScreen, self).__init__(**kwargs)
-        self.params = kwargs["params"]
         self.journeys = self.params["journeys"]
         self.flt = self.ids.train_float
         self.flt.remove_widget(self.ids.train_base_box)
