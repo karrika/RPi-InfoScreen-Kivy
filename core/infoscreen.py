@@ -8,17 +8,20 @@ from kivy.logger import Logger
 from core.failedscreen import FailedScreen
 from core.getplugins import getPlugins
 
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
 
-class InfoScreen(FloatLayout):
+class InfoScreen(FloatLayout, BlackHole):
     # Flag for determining whether screen is locked or not
     locked = BooleanProperty(False)
+    plugins = ListProperty()
+    scrmgr = ObjectProperty(None)
 
     # List of plugings
 
-    def __init__(self, plugins, **kwargs):
-        scrmgr = ObjectProperty(None)
+    def __init__(self, plugins=None, **kwargs):
         plugins = plugins
-
         super(InfoScreen, self).__init__(**kwargs)
 
         # Get our list of available plugins

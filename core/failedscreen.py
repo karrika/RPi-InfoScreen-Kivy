@@ -1,11 +1,15 @@
 from kivy.uix.screenmanager import Screen
 from kivy.uix.label import Label
+from kivy.properties import StringProperty, ListProperty
 
 
 class FailedScreen(Screen):
     """Custom Screen to notify users where certain plugins have not installed
        correctly.
     """
+    dep = ListProperty()
+    failed = ListProperty()
+
     def __init__(self, dep=None, failed=None, **kwargs):
         self.dep = dep
         self.failed = failed

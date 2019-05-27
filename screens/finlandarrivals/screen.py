@@ -29,7 +29,7 @@ class BlackHole(object):
     def __init__(self, **kw):
         super(BlackHole, self).__init__()
 
-class FinlandArrivals(BoxLayout, BlackHole):
+class FinlandArrivals(BoxLayout):
     """Custom widget to display bus information.
 
        Displays route name, destination and expected arrival time.
@@ -40,9 +40,9 @@ class FinlandArrivals(BoxLayout, BlackHole):
     bus_time = StringProperty("Loading...")
     bus_delay = StringProperty("Loading...")
 
-    def __init__(self, **kwargs):
+    def __init__(self, bus, **kwargs):
+        bus = bus
         super(FinlandArrivals, self).__init__(**kwargs)
-        bus = kwargs["bus"]
         self.bus_route = bus["route"]
         self.bus_type = bus["type"]
         self.bus_destination = bus["destination"]
@@ -50,7 +50,7 @@ class FinlandArrivals(BoxLayout, BlackHole):
         self.bus_delay = bus["delay"]
 
 
-class FinlandArrivalsStop(Screen, BlackHole):
+class FinlandArrivalsStop(Screen):
     """Custom screen class for showing countdown information for a specific
        bus stop.
     """
@@ -66,9 +66,9 @@ class FinlandArrivalsStop(Screen, BlackHole):
     def update(self, dt):
         self.get_time()
 
-    def __init__(self, **kwargs):
+    def __init__(self, stop, **kwargs):
+        self.stop = stop
         super(FinlandArrivalsStop, self).__init__(**kwargs)
-        self.stop = kwargs["stop"]
         self.description = self.stop["description"]
         self.filters = None
         self.get_time()
@@ -182,9 +182,9 @@ class FinlandArrivalsScreen(Screen, BlackHole):
 
     Has a screenmanager to hold screens for specific bus stops.
     """
-    def __init__(self, **kwargs):
+    def __init__(self, params, **kwargs):
+        self.params = params
         super(FinlandArrivalsScreen, self).__init__(**kwargs)
-        self.params = kwargs["params"]
         self.stops = self.params["stops"]
         self.flt = self.ids.lbus_float
         self.flt.remove_widget(self.ids.lbus_base_box)

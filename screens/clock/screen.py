@@ -3,6 +3,7 @@ from datetime import datetime
 from kivy.properties import DictProperty
 from kivy.clock import Clock
 from kivy.uix.screenmanager import Screen
+from kivy.uix.floatlayout import FloatLayout
 
 class BlackHole(object):
     def __init__(self, **kw):
