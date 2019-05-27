@@ -10,10 +10,13 @@ acknowledge the source of your data as appropriate.
 import requests
 
 # we'll use the basic eTree parser to parse the XML file
-import xml.etree.cElementTree as et
+from lxml import etree
 
 # We need regular expressions to strip part of the XML file out
 import re
+
+# Use StringIO for parsing the xml as string
+import io
 
 # Web address for tube data
 BASE_URL = "http://cloud.tfl.gov.uk/TrackerNet/LineStatus"
@@ -50,28 +53,36 @@ def TubeStatus(filterlines=None):
     rawstatus = __getTubeData()
 
     if rawstatus:
-        # Strip out the xmlns tag (it just makes parsing the XML file more
-        # difficult)
-        rawstatus = re.sub(' xmlns="[^"]+"', '', rawstatus, count=1)
+        # Strip away encoding as lxml cannot handle encoding changes
+        RE_XML_ENCODING = re.compile("encoding=\"UTF-8\"", re.IGNORECASE)
+
+        # Turn xml data to string stream
+        tubestatus = io.StringIO()
+        tubestatus.write(RE_XML_ENCODING.sub("", rawstatus.decode('utf-8'), count=1))
+        tubestatus.seek(0)
+
         # Loa it into eTree
-        status = et.XML(rawstatus)
+        status = etree.parse(tubestatus)
     else:
         return None
+
+    # Find root tag
+    root = status.getroot()
 
     # Create our empty list
     lines = []
 
     # Loop over the lines
-    for line in status.getchildren():
+    for line in root.getchildren():
 
         # Create an empty dict object for the information
         l = {}
 
         # Get the line name
-        l["name"] = line.find("Line").get("Name")
+        l["name"] = line.find("{http://webservices.lul.co.uk/}Line").get("Name")
 
         # Get the short description of the status
-        l["status"] = line.find("Status").get("Description")
+        l["status"] = line.find("{http://webservices.lul.co.uk/}Status").get("Description")
 
         # Get the extended definition
         detail = line.get("StatusDetails")
