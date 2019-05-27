@@ -2,7 +2,7 @@
     "screen": "TrainScreen",
     "kv": "trains.kv",
     "enabled": false,
-    "dependencies": ["requests", "BeautifulSoup"],
+    "dependencies": ["requests", "bs4"],
     "params": {
         "journeys": [
             {"description": "London Victoria to Clapham Junction",
