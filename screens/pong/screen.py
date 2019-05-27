@@ -19,6 +19,9 @@ from kivy.app import App
 
 from core.bglabel import BGLabelButton
 
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
 
 class WinLabel(BGLabelButton):
     pass
@@ -45,16 +48,16 @@ class PongBall(Widget):
         self.pos = Vector(*self.velocity) + self.pos
 
 
-class PongScreen(Screen):
+class PongScreen(Screen, BlackHole):
     ball = ObjectProperty(None)
     player1 = ObjectProperty(None)
     player2 = ObjectProperty(None)
     pongfloat = ObjectProperty(None)
 
-    def __init__(self, **kwargs):
+    def __init__(self, params, **kwargs):
         super(PongScreen, self).__init__(**kwargs)
         try:
-            self.winscore = int(kwargs["params"]["winningscore"])
+            self.winscore = int(params["winningscore"])
             if self.winscore < 0:
                 self.winscore = 5
         except ValueError:
