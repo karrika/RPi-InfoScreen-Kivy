@@ -72,7 +72,6 @@ class LondonBusStop(Screen):
         """Starts the process of retrieving countdown information."""
         try:
             # Load the bus data.
-            print(self.stop["stopid"])
             self.buses = LB.BusLookup(self.stop["stopid"])
         except:
             # If there's an error (e.g. no internet connection) then we have

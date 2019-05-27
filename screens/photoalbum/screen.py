@@ -8,6 +8,9 @@ from kivy.properties import (ObjectProperty,
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
 
 class Photo(Screen):
     """Screen object to display a photo."""
@@ -25,7 +28,7 @@ class PhotoLoading(Screen):
     pass
 
 
-class PhotoAlbumScreen(Screen):
+class PhotoAlbumScreen(Screen, BlackHole):
     """Base screen to run the photo album."""
 
     # Reference to the screen manager
@@ -34,13 +37,13 @@ class PhotoAlbumScreen(Screen):
     # Value for the screen display time
     photoduration = BoundedNumericProperty(5, min=2, max=60, errorvalue=5)
 
-    def __init__(self, **kwargs):
+    def __init__(self, params, **kwargs):
         super(PhotoAlbumScreen, self).__init__(**kwargs)
 
         # Get the user's preferences
-        self.folders = kwargs["params"]["folders"]
-        self.exts = kwargs["params"]["extensions"]
-        self.photoduration = kwargs["params"]["duration"]
+        self.folders = params["folders"]
+        self.exts = params["extensions"]
+        self.photoduration = params["duration"]
 
         # Initialise some useful variables
         self.running = False
