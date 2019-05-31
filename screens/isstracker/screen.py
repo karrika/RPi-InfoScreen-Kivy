@@ -4,14 +4,19 @@ import json
 
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
-from kivy.garden.mapview import MapView, MapMarker, MarkerMapLayer
+from kivy.garden.mapview import MapSource, MapView, MapMarker, MarkerMapLayer
 from kivy.clock import Clock
 
 import requests
 import ephem
 
-class ISSScreen(Screen):
+class BlackHole(object):
+    def __init__(self, **kw):
+        super(BlackHole, self).__init__()
+
+class ISSScreen(Screen, BlackHole):
     def __init__(self, **kwargs):
+        #print(**kwargs)
         super(ISSScreen, self).__init__(**kwargs)
 
         # Set the path for the folder
@@ -32,6 +37,7 @@ class ISSScreen(Screen):
 
         # Get positon of iss and place a marker there
         lat, lon = self.get_loc()
+        print('ISS at', lat, lon)
         self.marker = MapMarker(lat=lat, lon=lon)
 
         # Create a value to check when we last drew ISS path
@@ -41,7 +47,10 @@ class ISSScreen(Screen):
         self.path_icon = os.path.join(self.imagefolder, "dot.png")
 
         # Create the world map
-        self.map = MapView(id="mpv",lat=0, lon=0, zoom=1, scale=1.5)
+        kwargs = {}
+        kwargs["map_source"] = MapSource(url='https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', attribution="")
+
+        self.map = MapView(id="mpv",lat=0, lon=0, zoom=1, **kwargs)
         x, y = self.map.get_window_xy_from(0,0,1)
         self.map.scale_at(1.2, x, y)
 
@@ -85,6 +94,7 @@ class ISSScreen(Screen):
                 self.mmlayer.add_widget(MapMarker(lat=lat,
                                                   lon=lon,
                                                   source=self.path_icon))
+                print('ISS path at', lat, lon)
 
             # Update the flag so we know when next update should be run
             self.last_path_update = self.utcnow()
