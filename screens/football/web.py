@@ -70,7 +70,7 @@ def update():
     leagues = bottle.request.forms.getall("leagues")
     teams = bottle.request.forms.getall("teams")
     data = {"teams": teams, "leagues": leagues}
-    print data
+    print(data)
     headers = {"Content-Type": "application/json; charset=utf8"}
     r = requests.post(addr, headers=headers, data=json.dumps(data))
     j = r.json()
