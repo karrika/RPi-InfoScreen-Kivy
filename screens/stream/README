@@ -1,0 +1,15 @@
+RTSP Stream Viewer
+-----------
+
+Set up:
+
+Edit the conf.json file as follows
+
+- "stream_uri":   The url of the stream to play
+
+
+Future Release:
+  - Add Multiple streams to config
+  - Add these to config once supported:
+    - "user_id": Future Use - when kivy can add extra data to stream
+    - "user_password":    Future Use - when kivy can add extra data to stream

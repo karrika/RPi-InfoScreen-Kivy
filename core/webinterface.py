@@ -24,8 +24,8 @@ from kivy.app import App
 from bottle import Bottle, template, request, TEMPLATE_PATH, redirect
 import requests
 
-from getplugins import getPlugins
-from webapi import InfoScreenAPI
+from core.getplugins import getPlugins
+from core.webapi import InfoScreenAPI
 
 HEADER = '''Raspberry Pi Information Screen<br />'''
 

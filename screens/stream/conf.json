@@ -1,0 +1,9 @@
+{
+    "screen": "StreamScreen",
+    "kv": "stream.kv",
+    "dependencies": [],
+    "enabled": true,
+    "params": {
+        "stream_uri": ""
+    }
+}
